@@ -3,23 +3,40 @@ class model {
      this.playerCount = 1;
      this.bluePlayerMoves = [];
      this.redPlayerMoves = [];
+     this.won = false;
    }
 
    playerPlayed(cellId) {
         if (this.playerCount % 2 === 0) {
-           this.bluePlayerMoves.push(cellId);
+           this.bluePlayerMoves.push(Number(cellId));
            this.playerCount ++;
+           this.checkForWin('bluePlayerMoves');
+           if (this.won) {
+               return 'Blue Player Wins'
+           }
            return 'blue';
         }
         if (this.playerCount % 2 !== 0) {
-            this.redPlayerMoves.push(cellId);
+            this.redPlayerMoves.push(Number(cellId));
             this.playerCount ++;
+            this.checkForWin('redPlayerMoves');
+            if (this.won) {
+                return 'Red Player Wins'
+            }
             return 'red';
         }
    }
 
-   checkForWin() {
-      
+   checkForWin(player) {
+      const playerOrderedMoves =  this[player].sort((a, b) => a - b);
+      playerOrderedMoves.forEach(position => {
+          if ((playerOrderedMoves.includes(position + 1) && playerOrderedMoves.includes(position + 2) && playerOrderedMoves.includes(position + 3)) ||
+                (playerOrderedMoves.includes(position + 7) && playerOrderedMoves.includes(position + 14) && playerOrderedMoves.includes(position + 21)) || 
+                (playerOrderedMoves.includes(position + 8) && playerOrderedMoves.includes(position + 16) && playerOrderedMoves.includes(position + 24))) {
+                   console.log(`${player} one`)
+                   this.won =  true;
+                }
+      })
    }
 }
 
@@ -81,6 +98,10 @@ class Controller {
                    return;
                }
               this.currentPlayer = this.model.playerPlayed(e.target.id);
+              if (this.currentPlayer !== 'red' && this.currentPlayer !== 'blue') {
+                  alert (this.currentPlayer);
+                  return;
+              }
               this.view.addToken(e.target.id, this.currentPlayer);
            })
        })
