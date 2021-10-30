@@ -64,9 +64,14 @@ class view {
     // render function
     render() {
         let id = -1;
+        let row = -1;
         this.cells = Array(49).fill().map((cell) => {
             id ++;
-            const cellDiv = view.createElement('div', [], ['board-cell'], {id: id});
+            row ++;
+            if (row % 7 === 0) {
+               row = 0;
+            }
+            const cellDiv = view.createElement('div', [], ['board-cell'], {id: id, 'data-row': row});
             return cellDiv;
         })
         this.board = view.createElement('div', [...this.cells], ['main-board'], {});
@@ -78,6 +83,13 @@ class view {
         const circle = view.createElement('div', [], [player], {});
         this.cells[Number(id)].appendChild(circle);
     }
+
+
+
+    // check if row is has a token in it or not, for deciding where to place the new token
+
+    
+    
 
 }
 
